@@ -1,48 +1,45 @@
 package golum
 
 import (
-	"log"
+	"fmt"
 	"os"
 	"testing"
-
-	"github.com/kniren/gota/dataframe"
 )
 
-func TestHistogram(t *testing.T) {
-	f, err := os.Open("data/labeled_iris.csv")
-	if err != nil {
-		log.Printf("Error opening file %s\n", err.Error())
-		t.Error(err.Error())
-		return
-	}
-	defer f.Close()
-
-	df := dataframe.ReadCSV(f)
-	if err := CreateHistograms(df); err != nil {
+func TestCreateOneHistogram(t *testing.T) {
+	file := "data/labeled_iris.csv"
+	cols := []string{"sepal_length"}
+	if err := CreateHistograms(file, cols); err != nil {
 		t.Error(err.Error())
 	}
 
-	for _, name := range []string{"histogram_sepal_length.png", "histogram_sepal_width.png", "histogram_petal_length.png", "histogram_petal_width.png"} {
+	for _, col := range cols {
+		name := fmt.Sprintf("%s_histogram.png", col)
 		os.Remove(name)
 	}
 }
 
-func TestScatterplot(t *testing.T) {
-	f, err := os.Open("data/labeled_iris.csv")
-	if err != nil {
-		log.Printf("Error opening file %s\n", err.Error())
-		t.Error(err.Error())
-		return
-	}
-	defer f.Close()
-
-	df := dataframe.ReadCSV(f)
-	cols := []string{"sepal_length", "sepal_width", "petal_length", "petal_width"}
-	if err := CreatScatterplots(df, cols); err != nil {
+func TestMultipleHistograms(t *testing.T) {
+	file := "data/labeled_iris.csv"
+	cols := []string{"sepal_length", "sepal_width", "petal_length", "petal_width", "species"}
+	if err := CreateHistograms(file, cols); err != nil {
 		t.Error(err.Error())
 	}
 
-	for _, name := range []string{"sepal_length_scatterplot.png", "sepal_width_scatterplot.png", "petal_length_scatterplot.png", "petal_width_scatterplot.png"} {
+	for _, col := range cols {
+		name := fmt.Sprintf("%s_histogram.png", col)
+		os.Remove(name)
+	}
+}
+func TestHistogramsSpeciesFirst(t *testing.T) {
+	file := "data/iris_species_first.csv"
+	cols := []string{"sepal_length", "sepal_width", "petal_length", "petal_width", "species"}
+	if err := CreateHistograms(file, cols); err != nil {
+		t.Error(err.Error())
+	}
+
+	for _, col := range cols {
+		name := fmt.Sprintf("%s_histogram.png", col)
 		os.Remove(name)
 	}
 }
