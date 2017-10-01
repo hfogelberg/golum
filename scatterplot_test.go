@@ -31,3 +31,15 @@ func TestMultipleScatterplots(t *testing.T) {
 		os.Remove(name)
 	}
 }
+
+func TestPairPlot(t *testing.T) {
+	cols := []string{"sepal_width", "petal_length", "petal_width"}
+	if err := CreatePairplots("data/labeled_iris.csv", cols, cols); err != nil {
+		t.Error(err.Error())
+	}
+
+	for _, f := range []string{"petal_length_scatter.png", "petal_width_scatter.png", "sepal_width_scatter.png"} {
+		os.Remove(f)
+	}
+
+}

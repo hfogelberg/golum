@@ -1,6 +1,7 @@
 package golum
 
 import (
+	"image/color"
 	"log"
 	"os"
 
@@ -39,7 +40,7 @@ func CreateScatterplots(file string, cols []string, target string) error {
 		}
 
 		p.X.Label.Text = name
-		p.Y.Label.Text = "y"
+		p.Y.Label.Text = target
 		p.Add(plotter.NewGrid())
 
 		s, err := plotter.NewScatter(pts)
@@ -49,6 +50,7 @@ func CreateScatterplots(file string, cols []string, target string) error {
 		}
 
 		s.GlyphStyle.Radius = vg.Points(3)
+		s.GlyphStyle.Color = color.RGBA{R: 255, B: 128, A: 255}
 		p.Add(s)
 		if err := p.Save(4*vg.Inch, 4*vg.Inch, name+"_scatter.png"); err != nil {
 			log.Printf("Error saving scatter plot %s\n", err.Error())
@@ -56,9 +58,21 @@ func CreateScatterplots(file string, cols []string, target string) error {
 		}
 	}
 
-	log.Println("Done creating scatter plots")
-	// Both Radio and TV have a somewhat linear relationship with sales
 	return nil
+}
+
+func CreatePairplots(file string, colsA []string, colsB []string) error {
+	for _, colA := range colsA {
+		var cols []string
+		for _, colB := range colsB {
+			if colA != colB {
+				cols = append(cols, colB)
+			}
+		}
+		if err := CreateScatterplots(file, cols, colA); err != nil {
+			return err
+		}
+	}
 
 	return nil
 }
