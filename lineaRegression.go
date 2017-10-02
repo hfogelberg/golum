@@ -10,11 +10,18 @@ import (
 	"github.com/sajari/regression"
 )
 
-func TrainLinearModel(file string, fieldsPerRecord int, input string, observed string) (string, error) {
+type RegressionFormula struct {
+	FormulaText string
+	Constant    float64
+	Coef        float64
+}
+
+func TrainLinearModel(file string, fieldsPerRecord int, input string, observed string) (RegressionFormula, error) {
+	var formula RegressionFormula
 	f, err := os.Open(file)
 	if err != nil {
 		fmt.Printf("Error opening training file %s\n", err.Error())
-		return "", err
+		return formula, err
 	}
 	defer f.Close()
 
@@ -24,7 +31,7 @@ func TrainLinearModel(file string, fieldsPerRecord int, input string, observed s
 	trainingData, err := reader.ReadAll()
 	if err != nil {
 		log.Printf("Error reading training data %s\n", err.Error())
-		return "", err
+		return formula, err
 	}
 
 	var r regression.Regression
@@ -40,14 +47,14 @@ func TrainLinearModel(file string, fieldsPerRecord int, input string, observed s
 		yVal, err := strconv.ParseFloat(record[3], 64)
 		if err != nil {
 			log.Printf("Error parsing sales data %s\n", err.Error())
-			return "", err
+			return formula, err
 		}
 
 		// Parse TV val
 		tvVal, err := strconv.ParseFloat(record[0], 64)
 		if err != nil {
 			log.Printf("Error parsing sales data %s\n", err.Error())
-			return "", err
+			return formula, err
 		}
 
 		// Add data ponts to training model and do the training
@@ -55,5 +62,9 @@ func TrainLinearModel(file string, fieldsPerRecord int, input string, observed s
 		r.Run()
 	}
 	fmt.Printf("\nRegression formula: \n%v\n", r.Formula)
-	return r.Formula, nil
+
+	formula.FormulaText = r.Formula
+	formula.Constant = r.Coeff(0)
+	formula.Coef = r.Coeff(1)
+	return formula, nil
 }

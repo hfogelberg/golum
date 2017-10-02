@@ -14,12 +14,12 @@ func TrainLinearModelTest(t *testing.T) {
 		t.Error(err)
 	}
 
-	formula, err := TrainLinearModel(trainCsv, 2, "Salary", "YearsExperience")
+	f, err := TrainLinearModel(trainCsv, 2, "Salary", "YearsExperience")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	fmt.Println(formula)
+	fmt.Println("Text %s, cons: %0.2f, coeff: %0.2f\n", f.FormulaText, f.Constant, f.Coef)
 
 	os.Remove("test.csv")
 	os.Remove("train.csv")
