@@ -6,21 +6,32 @@ import (
 	"testing"
 )
 
-func TrainLinearModelTest(t *testing.T) {
-	file := "data/salary_data.csv"
-
+func TestTrainLinearModel(t *testing.T) {
+	file := "../data/advertising.csv"
 	trainCsv, _, err := TrainTestSplit(file, 0.3)
-	if err != nil {
-		t.Error(err)
-	}
-
-	f, err := TrainLinearModel(trainCsv, 2, "Salary", "YearsExperience")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	fmt.Println("Text %s, cons: %0.2f, coeff: %0.2f\n", f.FormulaText, f.Constant, f.Coef)
+	f, err := TrainLinearModel(trainCsv, 4, "TV", "Sale", 0, 3)
+	if err != nil {
+		t.Error(err.Error())
+	}
 
+	fmt.Printf("Formula: %s\n", f.FormulaText)
 	os.Remove("test.csv")
 	os.Remove("train.csv")
+}
+
+func TestVisualizeRegression(t *testing.T) {
+	file := "data/advertising.csv"
+	cols := []string{"TV", "Sales"}
+	df, err := GetDFFromCSV(file, cols)
+	if err != nil {
+		t.Error(err.Error())
+	}
+	if err := VisualizeRegression(&df, "TV", "Sales", 7.98, 0.06); err != nil {
+		t.Error(err.Error)
+	}
+	os.Remove("linear_regression.png")
 }

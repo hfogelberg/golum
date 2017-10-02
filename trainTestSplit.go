@@ -69,5 +69,5 @@ func TrainTestSplit(filename string, test float64) (string, string, error) {
 
 	}
 
-	return "training.csv", "test.csv", nil
+	return "train.csv", "test.csv", nil
 }
