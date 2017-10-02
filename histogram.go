@@ -3,7 +3,6 @@ package golum
 import (
 	"fmt"
 	"log"
-	"os"
 
 	"gonum.org/v1/plot"
 	"gonum.org/v1/plot/plotter"
@@ -12,19 +11,8 @@ import (
 	"github.com/kniren/gota/dataframe"
 )
 
-func CreateHistograms(file string, cols []string) error {
-	iris, err := os.Open(file)
-	if err != nil {
-		log.Printf("Error opening CSV file %s\n", err.Error())
-		return err
-	}
-	defer iris.Close()
-
-	df := dataframe.ReadCSV(iris)
-	sel := df.Select(cols)
-	fmt.Println(sel)
-
-	for _, colName := range sel.Names() {
+func CreateHistograms(df *dataframe.DataFrame) error {
+	for _, colName := range df.Names() {
 		v := make(plotter.Values, df.Nrow())
 		for i, val := range df.Col(colName).Float() {
 			v[i] = val

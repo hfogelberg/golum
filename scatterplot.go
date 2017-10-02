@@ -1,9 +1,9 @@
 package golum
 
 import (
+	"fmt"
 	"image/color"
 	"log"
-	"os"
 
 	"gonum.org/v1/plot"
 	"gonum.org/v1/plot/plotter"
@@ -12,15 +12,7 @@ import (
 	"github.com/kniren/gota/dataframe"
 )
 
-func CreateScatterplots(file string, cols []string, target string) error {
-	iris, err := os.Open(file)
-	if err != nil {
-		log.Printf("Error opening CSV file %s\n", err.Error())
-		return err
-	}
-	defer iris.Close()
-
-	dfAll := dataframe.ReadCSV(iris)
+func CreateScatterplots(dfAll *dataframe.DataFrame, cols []string, target string) error {
 	df := dfAll.Select(cols)
 	// Extract the target column
 	yVals := dfAll.Col(target).Float()
@@ -54,22 +46,6 @@ func CreateScatterplots(file string, cols []string, target string) error {
 		p.Add(s)
 		if err := p.Save(4*vg.Inch, 4*vg.Inch, name+"_scatter.png"); err != nil {
 			log.Printf("Error saving scatter plot %s\n", err.Error())
-			return err
-		}
-	}
-
-	return nil
-}
-
-func CreatePairplots(file string, colsA []string, colsB []string) error {
-	for _, colA := range colsA {
-		var cols []string
-		for _, colB := range colsB {
-			if colA != colB {
-				cols = append(cols, colB)
-			}
-		}
-		if err := CreateScatterplots(file, cols, colA); err != nil {
 			return err
 		}
 	}
