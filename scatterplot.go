@@ -1,7 +1,6 @@
 package golum
 
 import (
-	"fmt"
 	"image/color"
 	"log"
 

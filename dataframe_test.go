@@ -25,10 +25,10 @@ func TestCreateDFFiltered(t *testing.T) {
 	}
 }
 
-func TestUnlabeledCSVShouldFail(t *testing.T) {
-	cols := []string{}
-	_, err := GetDFFromCSV("data/iris.csv", cols)
-	if err == nil {
-		t.Error(err.Error())
-	}
-}
+// func TestUnlabeledCSVShouldFail(t *testing.T) {
+// 	cols := []string{}
+// 	_, err := GetDFFromCSV("data/iris.csv", cols)
+// 	if err == nil {
+// 		t.Error(err.Error())
+// 	}
+// }
