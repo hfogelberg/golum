@@ -2,6 +2,7 @@ package golum
 
 import (
 	"fmt"
+	"os"
 	"testing"
 )
 
@@ -19,4 +20,38 @@ func TestGetStatistics(t *testing.T) {
 	}
 
 	fmt.Println(stats)
+}
+
+func TestCalculateMAE(t *testing.T) {
+	file := "data/salary_data.csv"
+	_, testCsv, err := TrainTestSplit(file, 0.3)
+	if err != nil {
+		t.Error(err)
+	}
+
+	mae, err := CalculateMAE(testCsv, 2, 0, 1)
+	if err != nil {
+		t.Error(err.Error())
+	}
+	fmt.Println(mae)
+
+	os.Remove("test.csv")
+	os.Remove("train.csv")
+}
+
+func TestCalculateMSE(t *testing.T) {
+	file := "data/salary_data.csv"
+	_, testCsv, err := TrainTestSplit(file, 0.3)
+	if err != nil {
+		t.Error(err)
+	}
+
+	mse, err := CalculateMSE(testCsv, 2, 0, 1)
+	if err != nil {
+		t.Error(err.Error())
+	}
+	fmt.Println(mse)
+
+	os.Remove("test.csv")
+	os.Remove("train.csv")
 }
