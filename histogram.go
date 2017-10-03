@@ -11,8 +11,26 @@ import (
 	"github.com/kniren/gota/dataframe"
 )
 
-func CreateHistograms(df *dataframe.DataFrame) error {
+func CreateHistograms(df *dataframe.DataFrame, cols []string) error {
+	if len(cols) > 0 {
+		log.Println("Multiple columns")
+		for _, col := range cols {
+			dfSel := df.Select([]string{col})
+			if err := drawHistogram(&dfSel); err != nil {
+				return err
+			}
+		}
+	} else {
+		if err := drawHistogram(df); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func drawHistogram(df *dataframe.DataFrame) error {
 	for _, colName := range df.Names() {
+		log.Printf("Drawing histogram for %s\n", colName)
 		v := make(plotter.Values, df.Nrow())
 		for i, val := range df.Col(colName).Float() {
 			v[i] = val
@@ -40,5 +58,6 @@ func CreateHistograms(df *dataframe.DataFrame) error {
 			return err
 		}
 	}
+
 	return nil
 }

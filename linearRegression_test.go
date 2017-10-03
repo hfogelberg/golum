@@ -7,7 +7,7 @@ import (
 )
 
 func TestTrainLinearModel(t *testing.T) {
-	file := "../data/advertising.csv"
+	file := "data/advertising.csv"
 	trainCsv, _, err := TrainTestSplit(file, 0.3)
 	if err != nil {
 		t.Error(err.Error())

@@ -3,28 +3,40 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/hfogelberg/golum"
 )
 
 func main() {
-	file := "../data/advertising.csv"
-	trainCsv, _, err := golum.TrainTestSplit(file, 0.3)
+	file := "../data/labeled_iris.csv"
+	df, err := golum.GetDFFromCSV(file, nil)
 	if err != nil {
 		log.Println(err.Error())
+		return
 	}
-
-	f, err := golum.TrainLinearModel(trainCsv, 4, "TV", "Sales", 0, 3)
-	if err != nil {
+	if err := golum.CreateHistograms(&df, nil); err != nil {
 		log.Println(err.Error())
+		return
 	}
 
-	fmt.Printf("Formula: %s\n", f.FormulaText)
-	fmt.Printf("Const: %0.2f, Coeff: %0.2f\n", f.Constant, f.Coef)
-
-	cols := []string{"TV", "Sales"}
-	df, err := golum.GetDFFromCSV(file, cols)
-	if err := golum.VisualizeRegression(&df, "TV", "Sales", f.Constant, f.Coef); err != nil {
-		log.Println(err.Error())
+	cols := []string{"sepal_length", "sepal_width", "petal_length", "petal_width"}
+	for _, col := range cols {
+		name := fmt.Sprintf("%s_histogram.png", col)
+		os.Remove(name)
 	}
+
+	// file := "../data/advertising.csv"
+	// // cols := []string{"TV", "Sales"}
+	// df, err := golum.GetDFFromCSV(file, nil)
+	// if err != nil {
+	// 	return
+	// }
+	// if err := golum.CreateHistograms(&df, nil); err != nil {
+	// 	fmt.Printf("ERR! %s\n", err.Error())
+	// 	return
+	// }
+
+	// fmt.Println("OK!")
+
 }

@@ -13,7 +13,7 @@ func TestCreateOneHistogram(t *testing.T) {
 	if err != nil {
 		t.Error(err.Error())
 	}
-	if err := CreateHistograms(&df); err != nil {
+	if err := CreateHistograms(&df, nil); err != nil {
 		t.Error(err.Error())
 	}
 
@@ -25,12 +25,12 @@ func TestCreateOneHistogram(t *testing.T) {
 
 func TestMultipleHistograms(t *testing.T) {
 	file := "data/labeled_iris.csv"
-	cols := []string{"sepal_length", "sepal_width", "petal_length", "petal_width"}
+	cols := []string{"sepal_length", "sepal_width"}
 	df, err := GetDFFromCSV(file, cols)
 	if err != nil {
 		t.Error(err.Error())
 	}
-	if err := CreateHistograms(&df); err != nil {
+	if err := CreateHistograms(&df, cols); err != nil {
 		t.Error(err.Error())
 	}
 
